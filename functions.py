@@ -74,7 +74,7 @@ def get_loss(f):
 
 def accuracy(y_pred, y_true):
     if len(y_pred) == 1: # binary
-        y_batch = y_true[0]
+        y_true = y_true[0]
         y_pred = (y_pred > 0.5).astype(np.int)[0]
     else:
         y_true = np.argmax(y_true, axis=0) # NOTE: one-hot encoded
