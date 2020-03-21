@@ -1,5 +1,7 @@
 import numpy as np
 
+from functions import get_activation
+
 class Linear:
     def __init__(self, in_channels, out_channels, act=None):
         self.in_channels = in_channels
@@ -7,7 +9,7 @@ class Linear:
 
         self.weight = np.random.randn(out_channels, in_channels) / np.sqrt(in_channels) # NOTE: normal distribution
         self.bias = np.zeros((out_channels, 1)) # NOTE: zeroed out
-        self.act = act
+        self.act = get_activation(act)
 
     def forward(self, x):
         z = (self.weight @ x) + self.bias

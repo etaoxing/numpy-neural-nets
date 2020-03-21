@@ -73,7 +73,7 @@ def get_loss(f):
         raise NotImplementedError
 
 def accuracy(y_pred, y_true):
-    if len(y_pred) == 1: # binary
+    if len(y_pred) == 1: # binary classification
         y_true = y_true[0]
         y_pred = (y_pred > 0.5).astype(np.int)[0]
     else:

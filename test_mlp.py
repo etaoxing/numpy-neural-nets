@@ -2,21 +2,26 @@ from sklearn import datasets
 import numpy as np
 np.random.seed(1)
 
-from nets import MLP
+from nets import Net, MLP
+from layers import Linear
 
-def binary_test():
-    data = datasets.make_blobs(n_samples=1000, centers=2)
+def moons_test():
+    print('-' * 10, 'moons test', '-' * 10)
+    data = datasets.make_moons(n_samples=1000)
     X = data[0]
     y = np.expand_dims(data[1], 1) # binary classification
     print('X: {}, y: {}'.format(X.shape, y.shape))
 
-    net = MLP(2, 1, [4, 4],
-             activation='sigmoid',
-             final_activation='sigmoid',
-             loss='mse')
-    net.train(X, y, batch_size=16, epochs=25, lr=0.1)
+    net = Net([Linear(2, 8, act='sigmoid'),
+               Linear(8, 1, act='sigmoid')],
+               loss='mse')
+    print(net)
+
+    net.train(X, y, batch_size=64, epochs=100, lr=0.5)
+    print('-' * 35)
 
 def digits_test():
+    print('-' * 10, 'digits test', '-' * 10)
     data = datasets.load_digits()
     X, y = data['data'], data['target']
     num_classes = 10
@@ -28,8 +33,11 @@ def digits_test():
               final_activation='sigmoid',
               loss='mse')
     print(net)
-    net.train(X, y, batch_size=32, epochs=100, lr=0.001)
+
+    net.train(X, y, batch_size=32, epochs=50, lr=0.01)
+    print('-' * 35)
 
 if __name__ == '__main__':
-    # binary_test()
+    moons_test()
+    print()
     digits_test()

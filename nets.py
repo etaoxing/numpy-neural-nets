@@ -1,23 +1,16 @@
-from abc import ABC, abstractmethod
 import numpy as np
 
 from layers import Linear
 from functions import get_activation, get_loss, accuracy
 
-class Net(ABC):
-    def __init__(self, loss='mse'):
+class Net:
+    def __init__(self, layers, loss='mse'):
+        self.layers = layers
         self.criterion = get_loss(loss)
-
-        self.layers = []
-        self.init_layers()
 
     @property
     def num_layers(self):
         return len(self.layers)
-
-    @abstractmethod
-    def init_layers(self):
-        return
 
     def __str__(self):
         s = '{}(\n'.format(self.__class__.__name__)
@@ -86,18 +79,21 @@ class MLP(Net):
         self.channels = [in_channels] + hidden_channels + [out_channels]
         self.activation = activation
         self.final_activation = final_activation
-        super().__init__(**kwargs)
+        layers = self.make_layers()
+        super().__init__(layers, **kwargs)
 
-    def init_layers(self):
+    def make_layers(self):
+        layers = []
         for i in range(1, len(self.channels)):
             x = self.channels[i - 1]
             y = self.channels[i]
             act = self.final_activation if i == (len(self.channels) - 1) else self.activation
-            self.layers.append(Linear(x, y, act=get_activation(act)))
+            layers.append(Linear(x, y, act=act))
+        return layers
 
 # class CNN(Net):
 #     def __init__(self, **kwargs):
 #         super().__init__(**kwargs)
 
-#     def init_layers(self):
+#     def make_layers(self):
 #         pass
